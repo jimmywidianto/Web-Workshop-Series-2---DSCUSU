@@ -40,13 +40,13 @@
                             <hr>
                         <div>
                             <form method="POST" id="register-form" class="form-register">
-                                <label for="username">Email/username:</label>
+                                <label for="username">Username:</label>
                                 <input required type="text" id="username" name="username" placeholder="Your Username...">                                
                                 <label for="password">Password:</label>
                                 <input required type="password" id="password" name="password" placeholder="Your password...">
                                 <div class="term-form">
-                                    <input class="left" required type="checkbox" name = "terms" value = "on">
-                                    <label class="right">Keep me login later</label>
+                                    <input class="left" type="checkbox" name = "terms" value = "on">
+                                    <label class="right">Remember me</label>
                                 </div>
                                 <input type="submit" form="register-form" value="Submit"></Input>
                             </form>
