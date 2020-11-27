@@ -40,6 +40,8 @@
                         <hr>
                     <div>
                         <form method="POST" id="register-form" class="form-register">
+                            <label for="name">Name:</label>
+                            <input required type="text" id="name" name="name" placeholder="Your Name...">
                             <label for="username">Username:</label>
                             <input required type="text" id="username" name="username" placeholder="Your Username...">
                             <label for="email">Email:</label>
