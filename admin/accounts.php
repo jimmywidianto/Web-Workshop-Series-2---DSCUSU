@@ -1,4 +1,12 @@
 <?php include "partials/_header.php"; ?>
+<?php
+include "../database/connecton.php";
+
+$query = "SELECT * FROM accounts ORDER BY id DESC";
+
+$stmt = $con->prepare($query);
+$stmt->execute();
+?>
 
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
@@ -29,14 +37,24 @@
                     </tr>
                 </tfoot>
                 <tbody>
+
+                    <?php
+                    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    foreach($rows as $row):
+                        extract($row);
+                    ?>
+
                     <tr>
-                        <td>Tiger Nixon</td>
-                        <td>tigernixon</td>
-                        <td>tigernixon@user.com</td>
-                        <td>Male</td>
-                        <td>2000-04-25</td>
-                        <td>User</td>
+                        <td><?php echo $name; ?></td>
+                        <td><?php echo $username; ?></td>
+                        <td><?php echo $email; ?></td>
+                        <td><?php echo $gender; ?></td>
+                        <td><?php echo $birthdate; ?></td>
+                        <td><?php echo $level; ?></td>
                     </tr>
+
+                    <?php endforeach; ?>
+                    
                 </tbody>
             </table>
         </div>

@@ -38,8 +38,59 @@
                             </div>
                         </div>
                             <hr>
+                        
+                        <?php
+                        if($_POST) {
+                            include "database/connecton.php";
+
+                            try {
+                                $query = "SELECT * FROM accounts WHERE username=:username and password=:password";
+                                
+                                $stmt = $con->prepare($query);
+
+                                $username = htmlspecialchars(strip_tags($_POST['username']));
+                                $password = md5(htmlspecialchars(strip_tags($_POST['password'])));
+
+                                $stmt->bindParam(':username', $username);
+                                $stmt->bindParam(':password', $password);
+
+                                $stmt->execute();
+                                $num = $stmt->rowCount();
+
+                                if($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                    extract($row);
+                                }
+
+                                if($num === 1) {
+                                    session_start();
+                                    
+                                    $_SESSION['id'] = $id;
+                                    $_SESSION['name'] = $name;
+                                    $_SESSION['level'] = $level;
+
+                                    if($level == "admin") {
+                                        header('Location: admin/Index.php');
+
+                                    }
+                                    else if($level == "user") {
+                                        header('Location: Index.php');
+    
+                                    }
+                                    echo($level);
+                                }
+                                else {
+                                    echo "<script>alert('Gagal melakukan registrasi. Silahkan periksa kembali data yang diinput')</script>";
+                                }
+
+                            }
+                            catch(PDOException $e) {
+                                die('Error: ' . $e->getMessage());
+                            }
+                        }
+                        ?>
+
                         <div>
-                            <form method="POST" id="register-form" class="form-register">
+                            <form method="POST" id="register-form" class="form-register" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
                                 <label for="username">Username:</label>
                                 <label for="username" style="color: red;" id="username_err"></label>
                                 <input required type="text" id="username" name="username" minlength="4" maxlength="12" onkeyup="validate_username()" placeholder="Your Username...">

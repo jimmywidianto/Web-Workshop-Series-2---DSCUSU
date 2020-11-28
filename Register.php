@@ -38,8 +38,83 @@
                         </div>
                     </div>
                         <hr>
+                        <?php
+                        $name = "";
+                        $username = "";
+                        $email = "";
+                        $birthdate = "";
+                        $gender = "";
+                        $password = "";
+                        if($_POST) {
+                            include "database/connecton.php";
+
+                            try {
+                                $query = "SELECT * FROM accounts WHERE username=:username or email=:email";
+                                
+                                $stmt = $con->prepare($query);
+
+                                $name = htmlspecialchars(strip_tags($_POST['name']));
+                                $username = htmlspecialchars(strip_tags($_POST['username']));
+                                $email = htmlspecialchars(strip_tags($_POST['email']));
+                                $birthdate = htmlspecialchars(strip_tags($_POST['bod']));
+                                $gender = htmlspecialchars(strip_tags($_POST['gender']));
+                                $password = md5(htmlspecialchars(strip_tags($_POST['password'])));
+
+                                $stmt->bindParam(':username', $username);
+                                $stmt->bindParam(':email', $email);
+
+                                $stmt->execute();
+                                $num = $stmt->rowCount();
+
+                                if($num > 0) { 
+                                    echo "<script>alert('Gagal melakukan registrasi. Username atau email sudah terdaftar.')</script>";
+
+                                }
+                                else {
+                                    try {
+                                        $query = "INSERT INTO accounts SET 
+                                                  name=:name, 
+                                                  username=:username, 
+                                                  email=:email, 
+                                                  birthdate=:birthdate, 
+                                                  gender=:gender, 
+                                                  password=:password,
+                                                  level='user'";
+                                        
+                                        $stmt = $con->prepare($query);
+        
+                                        $stmt->bindParam(':name', $name);
+                                        $stmt->bindParam(':username', $username);
+                                        $stmt->bindParam(':email', $email);
+                                        $stmt->bindParam(':birthdate', $birthdate);
+                                        $stmt->bindParam(':gender', $gender);
+                                        $stmt->bindParam(':password', $password);
+        
+                                        if($stmt->execute()) {
+                                            
+                                            header('Location: Index.php');
+        
+                                        }
+                                        else {
+                                            echo "<script>alert('Gagal melakukan registrasi. Silahkan periksa kembali data yang diinput.')</script>";
+                                        }
+        
+                                    }
+                                    catch(PDOException $e) {
+                                        die('Error: ' . $e->getMessage());
+                                    }
+                                    
+                                }
+
+                            }
+                            catch(PDOException $e) {
+                                die('Error: ' . $e->getMessage());
+                            }
+                            
+                        }
+                        ?>
                     <div>
-                        <form method="POST" id="register-form" class="form-register">
+                        <form method="POST" id="register-form" class="form-register" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
                             <label for="name">Name:</label>
                             <label for="name" style="color: red;" id="name_err"></label>
                             <input required type="text" id="name" name="name" onkeydown="return /[a-z, ]/i.test(event.key)" onkeyup="validate_name()" placeholder="Your Name...">
@@ -54,17 +129,24 @@
 
                             <div class="left">
                                 <label for="bod">Birth of Date:</label>
-                                <input required type="date" id="bod" name="bod">
+                                <input required type="date" id="bod" name="bod" value="<?php echo $birthdate; ?>">
                             </div>
                             <div class="right">
                                 <label for="gender">Gender:</label>
                                 <select name="gender" id="gender" required>
-                                    <option value="">Select</option>
+                                    <option disabled>Select</option>
+                                    <?php if($gender == 'Male'): ?>
+                                    <option value="male" selected>Male</option>
+                                    <option value="Female">Female</option>
+                                    <?php elseif($gender == 'Female'): ?>
+                                    <option value="male">Male</option>
+                                    <option value="Female" selected>Female</option>
+                                    <?php else: ?>
                                     <option value="male">Male</option>
                                     <option value="Female">Female</option>
+                                    <?php endif; ?>
                                 </select>
                             </div>
-
                             <label for="password">Password:</label>
                             <label for="password" style="color: red;" id="password_err"></label>
                             <input required type="password" id="password" minlength="8" onkeyup="validate_password()" name="password" placeholder="Your password...">
@@ -74,7 +156,7 @@
                             </div>
                             <input type="submit" form="register-form" value="Submit"></Input>
                         </form>
-
+                        
                         <script type="text/javascript" src="partials/_validate.js"></script>
                         
                     </div>  

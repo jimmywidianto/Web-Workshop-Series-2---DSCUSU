@@ -1,25 +1,40 @@
 <?php include "partials/_header.php"; ?>
+<?php
+
+include "database/connecton.php";
+
+$query = "SELECT id, name, gender, price, sold, imageurl FROM products ORDER BY sold DESC LIMIT 4";
+
+$stmt = $con->prepare($query);
+$stmt->execute();
+
+if($row = $stmt->fetch(PDO::FETCH_ASSOC)):
+    extract($row);
+
+?>
 
 <main>
     <section>
         <div class="container">
             <div class="top-wrapper">
                 <div class="header">
-                    <h1>Authentic Sneakers</h1>
+                    <h1><?php echo $name; ?></h1>
                     <p>20th Century Models</p>
                     <button type="button">
-                        <a href="Detail-shoe.php">
+                        <a href="Detail-shoe.php?p=<?php echo $id; ?>">
                             <img src="assets/Icon/cart.svg">
                             Buy Now
                         </a>
                     </button>
                 </div>
                 <figure>
-                    <img src="assets/Model/Model-Shoes.png" alt="model-shoes">
+                    <img src="<?php echo $imageurl; ?>" alt="<?php echo $name; ?>">
                 </figure>
             </div>
         </div>
     </section>
+
+<?php endif; ?>
 
     <section>
         <div class="container">
@@ -37,62 +52,34 @@
                 <h2>Best Seller This Month</h2>
                 <div class="card-container">
 
+                    <?php
+                    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    foreach($rows as $row):
+                        extract($row);
+                    ?>
+
                     <div class="card">
                         <div class="model-content">
                             <div>
-                                <img src="assets/Model/Model-Shoes-1.jpg" alt="Model-Shoes">
+                                <img src="<?php echo $imageurl; ?>" alt="$name">
                             </div>
                         </div>
                         <div class="card-content">
                             <div>
-                                <h3>Shaky Shoes</h3>
-                                <p>Men's Shoes</p>
-                                <p>Rp. 399.000</p>
+                                <h3><?php echo $name; ?></h3>
+                                <p><?php echo $gender; ?>'s Shoes</p>
+                                <p>Rp. <?php echo number_format($price,0,'','.'); ?></p>
                             </div>
                             <div>
-                                <button>Buy</button>
+                                <a href="Detail-shoe.php?p=<?php echo $id; ?>">
+                                    <button>Buy</button>
+                                </a>
                                 <a>Add to Cart</a>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="card">
-                        <div class="model-content">
-                            <div>
-                                <img src="assets/Model/Model-Shoes-2.jpg" alt="Model-Shoes">
-                            </div>
-                        </div>
-                        <div class="card-content">
-                            <div>
-                                <h3>Shaky Shoes</h3>
-                                <p>Men's Shoes</p>
-                                <p>Rp. 399.000</p>
-                            </div>
-                            <div>
-                                <button>Buy</button>
-                                <a>Add to Cart</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="model-content">
-                            <div>
-                                <img src="assets/Model/Model-Shoes-3.jpg" alt="Model-Shoes">
-                            </div>
-                        </div>
-                        <div class="card-content">
-                            <div>
-                                <h3>Shaky Shoes</h3>
-                                <p>Men's Shoes</p>
-                                <p>Rp. 399.000</p>
-                            </div>
-                            <div>
-                                <button>Buy</button>
-                                <a>Add to Cart</a>
-                            </div>
-                        </div>
-                    </div>
+                    <?php endforeach; ?>
                     
                 </div>
             </div>

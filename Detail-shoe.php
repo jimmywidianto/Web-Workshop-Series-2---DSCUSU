@@ -1,18 +1,32 @@
 <?php include "partials/_header.php"; ?>
+<?php
+include "database/connecton.php";
+
+$query = "SELECT id, name, gender, price, sold, imageurl FROM products WHERE id=:id";
+$stmt = $con->prepare($query);
+
+$id = htmlspecialchars(strip_tags($_GET['p']));
+
+$stmt->bindParam(':id', $id);
+$stmt->execute();
+
+if($row = $stmt->fetch(PDO::FETCH_ASSOC)):
+    extract($row);
+?>
 
 <main>
     <section>
         <div class="container">
             <div class="detail-container">
                 <div class="model-display">
-                    <img src="assets/Model/Model-Shoes-2.jpg" alt="Model-shoes-2">
+                    <img src="<?php echo $imageurl; ?>" alt="Model-shoes-2">
                 </div>
 
                 <div class="card-content">
                     <div>
-                        <h3>Shaky Shoes</h3>
-                        <p>Men's Shoes</p>
-                        <p>Rp. 399.000</p>
+                        <h3><?php echo $name; ?></h3>
+                        <p><?php echo $gender; ?>'s Shoes</p>
+                        <p>Rp. <?php echo number_format($price,0,'','.'); ?></p>
                     </div>
                     <div>
                         <button>Buy</button>
@@ -23,6 +37,7 @@
         </div>
     </section>
 
+    <?php endif; ?>
 
     <section>
         <div class="container">
