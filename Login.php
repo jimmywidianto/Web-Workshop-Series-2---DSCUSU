@@ -41,15 +41,19 @@
                         <div>
                             <form method="POST" id="register-form" class="form-register">
                                 <label for="username">Username:</label>
-                                <input required type="text" id="username" name="username" placeholder="Your Username...">                                
+                                <label for="username" style="color: red;" id="username_err"></label>
+                                <input required type="text" id="username" name="username" minlength="4" maxlength="12" onkeyup="validate_username()" placeholder="Your Username...">
+
                                 <label for="password">Password:</label>
-                                <input required type="password" id="password" name="password" placeholder="Your password...">
+                                <label for="password" style="color: red;" id="password_err"></label>
+                                <input required type="password" id="password" minlength="8" onkeyup="validate_password()" name="password" placeholder="Your password...">
                                 <div class="term-form">
                                     <input class="left" type="checkbox" name = "terms" value = "on">
                                     <label class="right">Remember me</label>
                                 </div>
                                 <input type="submit" form="register-form" value="Submit"></Input>
                             </form>
+                            <script type="text/javascript" src="partials/_validate.js"></script>
                             
                         </div>  
                     </div>

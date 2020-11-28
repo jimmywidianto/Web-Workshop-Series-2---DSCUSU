@@ -41,11 +41,17 @@
                     <div>
                         <form method="POST" id="register-form" class="form-register">
                             <label for="name">Name:</label>
-                            <input required type="text" id="name" name="name" placeholder="Your Name...">
+                            <label for="name" style="color: red;" id="name_err"></label>
+                            <input required type="text" id="name" name="name" onkeydown="return /[a-z, ]/i.test(event.key)" onkeyup="validate_name()" placeholder="Your Name...">
+
                             <label for="username">Username:</label>
-                            <input required type="text" id="username" name="username" placeholder="Your Username...">
+                            <label for="username" style="color: red;" id="username_err"></label>
+                            <input required type="text" id="username" name="username" minlength="4" maxlength="12" onkeyup="validate_username()" placeholder="Your Username...">
+
                             <label for="email">Email:</label>
-                            <input required type="email" id="email" name="email" placeholder="Your Email...">
+                            <label for="email" style="color: red;" id="email_err"></label>
+                            <input required type="email" id="email" name="email" onkeyup="validate_email()" placeholder="Your Email...">
+
                             <div class="left">
                                 <label for="bod">Birth of Date:</label>
                                 <input required type="date" id="bod" name="bod">
@@ -58,14 +64,18 @@
                                     <option value="Female">Female</option>
                                 </select>
                             </div>
+
                             <label for="password">Password:</label>
-                            <input required type="password" id="password" name="password" placeholder="Your password...">
+                            <label for="password" style="color: red;" id="password_err"></label>
+                            <input required type="password" id="password" minlength="8" onkeyup="validate_password()" name="password" placeholder="Your password...">
                             <div class="term-form">
                                 <input class="left" required type="checkbox" name = "terms" value = "on">
                                 <label class="right">I understand and agree with the Terms of Use and Privacy Policy</label>
                             </div>
                             <input type="submit" form="register-form" value="Submit"></Input>
                         </form>
+
+                        <script type="text/javascript" src="partials/_validate.js"></script>
                         
                     </div>  
                 </div>
